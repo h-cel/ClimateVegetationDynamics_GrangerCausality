@@ -11,7 +11,7 @@ scikit-learn
 
 ## Running the tests
 
-In order to test the framework, a test file is provided (test.csv). This file contains all features used in the publication for one pixel on earth.
+In order to test the framework, a test file is provided ([test.csv](test.csv)). This file contains all features used in the publication for one pixel on earth.
 
 The script allows you to test both the linear and non-linear framework. In order to execute both, use the following commands:
 
@@ -20,7 +20,7 @@ python GC_script.py test.csv linear
 python GC_script.py test.csv non-linear
 ```
 
-## Running the tests
+## Output
 
 The outcome of both tests provide you information on the explained variance of the baseline and full model as well as a quantification of the Granger causality. For more information, see publication.
 
