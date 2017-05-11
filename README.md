@@ -1,5 +1,7 @@
-# Papagiannopoulou_etal_GMD_2017
-This repository contains the source codes for the publication on "A non-linear Granger-causality framework to investigate climate–vegetation dynamics", by Papagiannopoulou et al., GMD, 2017.
+# Climate - Vegetation Dynamics: a Granger causality framework
+This repository contains the source codes used in the following publications: 
+* Papagiannopoulou et al., 2017. "A non-linear Granger-causality framework to investigate climate–vegetation dynamics". Geoscientific Model Development. https://doi.org/10.5194/gmd-2016-266.
+* Papagiannopoulou et al., 2017. "Vegetation anomalies caused by antecedent precipitation in most of the world". Environmental Research Letters. https://doi.org/10.1088/1748-9326/aa7145.
 
 ### Prerequisites
 
