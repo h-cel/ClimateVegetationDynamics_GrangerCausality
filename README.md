@@ -6,7 +6,7 @@ This repository contains the source codes for the publication on "A non-linear G
 The script is mainly built around the following package:
 
 ```
-python 2.7.12 |Anaconda 2.3.0 (64-bit) (or higher)
+python 2.7.12 | Anaconda 2.3.0 (64-bit) (or higher)
 scikit-learn
 ```
 
