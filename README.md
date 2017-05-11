@@ -3,7 +3,7 @@ This repository contains the source codes for the publication on "A non-linear G
 
 ### Prerequisites
 
-The script is mainly built around the following package:
+The script is mainly built using the following packages:
 
 ```
 python 2.7.12 | Anaconda 2.3.0 (64-bit) (or higher)
@@ -14,7 +14,7 @@ scikit-learn
 
 In order to test the framework, a test file is provided ([test.csv](test.csv)). This file contains all features used in the publication for one pixel on earth.
 
-The script allows you to test both the linear and non-linear framework. In order to execute both, use the following commands:
+The script allows you to test both the "linear" and "non-linear" framework. In order to execute these, use the following commands:
 
 ```
 python GC_script.py test.csv linear
