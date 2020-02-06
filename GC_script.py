@@ -16,15 +16,15 @@
 
 """
 import numpy as np
-from sklearn.preprocessing import Imputer
+from sklearn.impute import SimpleImputer as Imputer
 from sklearn.ensemble import RandomForestRegressor
 from numpy import genfromtxt
 import time
 import sys
-from sklearn.cross_validation import KFold
+from sklearn.model_selection import KFold
 from sklearn.metrics import r2_score
 from sklearn.linear_model import Ridge
-from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 import os
 
 #%%functions
@@ -44,7 +44,8 @@ def shift2(arr,num):
 def readFile(inpath):
     if os.path.isfile(inpath):
         dataset = genfromtxt(open(inpath,'r'), delimiter=',', dtype='f8')[0:] 
-        imp = Imputer(missing_values='NaN', strategy='mean', axis=0)# fill in the missing values with the mean of each column
+        dataset[np.isinf(dataset)] = np.nan
+        imp = Imputer(missing_values=np.nan, strategy='mean')# fill in the missing values with the mean of each column, works on axis=0 by default
         transformedData = imp.fit_transform(dataset)
         rmvedCols = imp.statistics_
         idxRmved = np.where(np.isnan(rmvedCols))#take the indices of the nan columns
@@ -62,7 +63,8 @@ def createAuto(target):
     dataAuto = np.empty((len(target),win-1))
     for i in range(1,win):
         dataAuto[:,i-1] = shift2(target, i)
-    imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
+    dataAuto[np.isinf(dataAuto)] = np.nan
+    imp = Imputer(missing_values=np.nan, strategy='mean')# fill in the missing values with the mean of each column, works on axis=0 by default
     transformedDataAuto = imp.fit_transform(dataAuto)           
     X_auto = transformedDataAuto
     return X_auto  
@@ -71,9 +73,9 @@ def createAuto(target):
 #returns: the R squared for each fold
 def crossValidation(X, y, cvFolds, estimator):
     r2 = np.zeros((cvFolds,1))   
-    kf = KFold(len(X), n_folds=cvFolds, shuffle=True, random_state = 30)
+    kf = KFold(n_splits=cvFolds, shuffle=True, random_state = 30)
     cv_j=0    
-    for train_index, test_index in kf:
+    for train_index, test_index in kf.split(np.arange(X.shape[0])):
         train_X = X[train_index,:]
         test_X = X[test_index,:]
         train_y = y[train_index]
@@ -87,16 +89,16 @@ def crossValidation(X, y, cvFolds, estimator):
 #parameters: 'X' the predictors, 'y' the target, 'cvFolds' number of folds, 'estimator' machine learning algorithm 
 #returns: the R squared for each fold
 def nestedCrossValidation(X, y, cvFolds, estimator):  
-    kf = KFold(len(X), n_folds=cvFolds, shuffle=True, random_state = 30)
+    kf = KFold(n_splits=cvFolds, shuffle=True, random_state = 30)
     cv_j=0
     param_grid = {'alpha': [0.0000001,0.000001,0.00001,0.0001,0.001,0.01,0.1,1,10,100,1000,10000,100000, 1000000, 10000000,1000000000]}
     r2 = np.zeros((cvFolds,1))   
-    for train_index, test_index in kf:
+    for train_index, test_index in kf.split(np.arange(X.shape[0])):
         train_X = X[train_index,:]
         test_X = X[test_index,:]
         train_y = y[train_index]
         test_y = y[test_index]
-        grid = GridSearchCV(estimator, param_grid=param_grid, verbose=0, cv=cvFolds, scoring='mean_squared_error')
+        grid = GridSearchCV(estimator, param_grid=param_grid, verbose=0, cv=cvFolds, scoring='neg_mean_squared_error')
         grid.fit(train_X,train_y)
         y_true, y_pred = test_y,grid.best_estimator_.predict(test_X)
         r2[cv_j] = r2_score(y_true, y_pred) 
